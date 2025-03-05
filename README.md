@@ -56,4 +56,3 @@ to_latex("input_file.pdf")
 ```
 
 
-Code available [here](https://github.com/PaulAndree/LatexToolkit/tree/main)
