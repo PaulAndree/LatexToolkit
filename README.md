@@ -4,7 +4,7 @@
 
 ## **Features**   
 ✔️ End to end pipeline from PDF to LaTeX .  
-✔️ Simple CLI tool for documents to LaTeX conversions.  
+✔️ LaTeX commands: \section{}	\begin{figure} \begin{equation}	\begin{table} and Inline math.  
 
 
 Future features: Support of .doc , .docx , .ppt and .pptx. formats.
