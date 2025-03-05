@@ -5,7 +5,7 @@
 ## **Features**   
 ✔️ End to end pipeline from PDF to LaTeX .  
 ✔️ Simple CLI tool for documents to LaTeX conversions.  
-✔️ Importable functions for integration into Python scripts.  
+
 
 Future features: Support of .doc , .docx , .ppt and .pptx. formats.
 
