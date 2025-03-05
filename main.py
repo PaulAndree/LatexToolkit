@@ -29,13 +29,7 @@ def md_to_latex(md_text):
     pattern = r'!\[\]\((.*?)\)\s*((?:Figura|Figure|Fig.)\s+\d+(?:\.\d+)?\s*.*?)\n'
     md_text = re.sub(pattern, convert_figure, md_text, flags=re.DOTALL)
 
-    # !\[\]\((.*?)\)	Matches an image reference ![](path/to/image.jpg), capturing the path.
-    # \s* → Matches any whitespace (spaces, newlines, etc.).
-    # Figure \d+	 Matches "Figure" followed by a number.
-    #  [^.]* → Matches any characters except a period (.)
-    # \. → Matches the period at the end of the caption
-    
-    
+       
     # Convert Block Formulas with Captions to Latex
     def convert_equation(match):
         equation = match.group(1).strip()
@@ -44,26 +38,24 @@ def md_to_latex(md_text):
     md_text = re.sub(r'\$\$(.*?)\$\$', convert_equation, md_text, flags=re.DOTALL)
     
     # Convert Inline Formulas to Latex
-    md_text = re.sub(r'\$(.*?)\$', r'\\(\1\\)', md_text)  # Inline math: $x^2$ -> \(x^2\)
+    md_text = re.sub(r'\$(.*?)\$', r'\\(\1\\)', md_text) 
     
     # Convert tables to Latex
     def convert_table(match):
-        table_html = match.group(2)  # Captured table HTML
+        table_html = match.group(2) 
         caption_before = re.search(r'^\s*(Table [IVXLCDM\d]+.*?)$', match.group(1), re.MULTILINE) if match.group(1) else None
         caption_after = re.search(r'^\s*(Table [IVXLCDM\d]+.*?)$', match.group(3), re.MULTILINE) if match.group(3) else None
-        # Use caption if available, otherwise default
         caption = caption_before.group(1) if caption_before else (caption_after.group(1) if caption_after else "Table caption")
         # Extract table rows
         rows = re.findall(r'<tr>(.*?)</tr>', table_html, re.DOTALL)
 
         if not rows:
-            return ""  # If no rows are found, return empty string (invalid table)
+            return "" 
 
         # Detect number of columns
         first_row = re.findall(r'<t[dh]>(.*?)</t[dh]>', rows[0])
-        num_columns = len(first_row) if first_row else 1  # Default to 1 if no columns detected
+        num_columns = len(first_row) if first_row else 1 
 
-        # Start LaTeX table
         latex_table = "\\begin{table}[h]\n\\centering\n"
         latex_table += "\\begin{tabular}{" + "|c" * num_columns + "|}\n\\hline\n"
         for row in rows:
@@ -75,10 +67,10 @@ def md_to_latex(md_text):
 
 
     table_pattern = re.compile(
-        r'\s*((?:Table|Tabla)\s+[IVXLCDM\d]+[^.\n]*[:.]?)?'  # Accepts "Table II:", "Tabla 2." etc.
-        r'\s*\n*'  # Allow one or more newlines between caption and tables
-        r'\s*<html><body><table>(.*?)</table></body></html>'  # HTML table content
-        r'\s*((?:Table|Tabla)\s+[IVXLCDM\d]+[^.\n]*[:.]?)?',  # Optional caption after
+        r'\s*((?:Table|Tabla)\s+[IVXLCDM\d]+[^.\n]*[:.]?)?'  
+        r'\s*\n*'  #
+        r'\s*<html><body><table>(.*?)</table></body></html>' 
+        r'\s*((?:Table|Tabla)\s+[IVXLCDM\d]+[^.\n]*[:.]?)?', 
         re.DOTALL | re.IGNORECASE
     )
     md_text = re.sub(table_pattern, convert_table, md_text)
@@ -90,8 +82,7 @@ def md_to_latex(md_text):
     # remove anything after bibliography section
     pattern = r'(\\section\s*\{(REFERENCES|REFERENCIAS|BIBLIOGRAPHY|BIBLIOGRAFIA)\s*\}).*'
     md_text = re.sub(pattern, r'\1', md_text, flags=re.IGNORECASE | re.DOTALL)
-    
-    #add latex doc format
+
     md_text = "\\begin{document}\n\n" + md_text + "\n\\end{document}"
     
     return md_text 
@@ -112,12 +103,8 @@ def to_latex(input_file):
     print(f"local_image_dir  {local_image_dir} local_md_dir as {local_md_dir}")
 
     image_writer, md_writer = FileBasedDataWriter(local_image_dir), FileBasedDataWriter(local_md_dir)
-    # read bytes
     reader1 = FileBasedDataReader("")
-    pdf_bytes = reader1.read(input_file)  # read the pdf content
-    
-    # proc
-    ## Create Dataset Instance
+    pdf_bytes = reader1.read(input_file)  
     ds = PymuDocDataset(pdf_bytes)
     
     ## inference
@@ -130,13 +117,9 @@ def to_latex(input_file):
         pipe_result = infer_result.pipe_txt_mode(image_writer)
     
     
-    ### dump markdown
+
     pipe_result.dump_md(md_writer, f"{name_without_suff}.md", local_md_dir)
-    
-    ### dump content list
     pipe_result.dump_content_list(md_writer, f"{name_without_suff}_content_list.json", local_md_dir)
-    
-    ### dump middle json
     pipe_result.dump_middle_json(md_writer, f'{name_without_suff}_middle.json')
 
     #################################################################################
@@ -165,7 +148,7 @@ def main():
     parser.add_argument("input_file", type=str, help="Path to the input file")
     args = parser.parse_args()
     
-    to_latex(args.input_file)  # Call the function with the argument
+    to_latex(args.input_file) 
 
 if __name__ == "__main__":
     main()
