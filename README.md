@@ -4,7 +4,7 @@
 
 ## **Features**   
 ✔️ End to end pipeline from PDF to LaTeX .  
-✔️ LaTeX commands: \section{}	\begin{figure} \begin{equation}	\begin{table} and Inline math.  
+✔️ LaTeX commands supported: section{}, figures, equations,	tables, and inline math.  
 
 
 Future features: Support of .doc , .docx , .ppt and .pptx. formats.
